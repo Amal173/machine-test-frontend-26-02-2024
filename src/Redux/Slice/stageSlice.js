@@ -3,7 +3,8 @@ import axios from 'axios';
 
 const initialState = {
   stages: [],
-  addStagesModal:false
+  stage: [],
+  addStagesModal:false,
 
 }
 
@@ -13,9 +14,21 @@ export const CreateStages = createAsyncThunk("stage/CreateStages", async (data) 
     return response.data;
   }
   )
+export const UpdateStage = createAsyncThunk("stage/UpdateStage", async ({id,values}) => {
+    console.log(values);
+    const response = await axios.put(`http://localhost:7070/stages/${id}`, values);
+    return response.data;
+  }
+  )
 
 export const getStages = createAsyncThunk("stage/getStages", async () => {
     const response = await axios.get(`http://localhost:7070/stages`);
+    return response.data;
+  }
+  )
+export const getOneStage = createAsyncThunk("stage/getOneStage", async (id) => {
+    console.log(id);
+    const response = await axios.get(`http://localhost:7070/stages/${id}`);
     return response.data;
   }
   )
@@ -35,19 +48,20 @@ export const stageSlice = createSlice({
     showAddStagesModal: (state,{payload}) => {
       state.addStagesModal=payload
     },
-    // handleEditMode: (state,{payload}) => {
-    //   state.editMode=payload
-    // },
   },
   extraReducers:(builder)=>{
       builder.addCase(getStages.fulfilled, (state, { payload }) => {
           state.stages = payload.stage
           
         })
+      builder.addCase(getOneStage.fulfilled, (state, { payload }) => {
+          state.stage = payload.stage
+          
+        })
 
     }
 })
 
-export const {showAddStagesModal } = stageSlice.actions
+export const {showAddStagesModal,handleEditmodal } = stageSlice.actions
 
 export default stageSlice.reducer

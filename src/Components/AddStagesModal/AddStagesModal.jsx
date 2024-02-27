@@ -1,65 +1,99 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Formik, Form, Field, FieldArray } from 'formik';
 import { useDispatch } from 'react-redux';
-import { CreateStages, getStages } from '../../Redux/Slice/stageSlice';
+import { CreateStages, UpdateStage, getOneStage, getStages, showAddStagesModal } from '../../Redux/Slice/stageSlice';
 import './AddStagesModal.css'
-const AddStagesModal = () => {
-    const dispatch = useDispatch()
+import { useSelector } from 'react-redux';
 
+const AddStagesModal = ({ id }) => {
+    const dispatch = useDispatch();
+    const { stage } = useSelector((state) => state.stage);
+    useEffect(() => {
+        if (id) {
+            dispatch(getOneStage(id));
+        }
+    }, [dispatch, id]);
+
+    const handleClose = () => {
+        dispatch(showAddStagesModal(false));
+    }
+    const initialValues = id ? { stages: stage.stage } : { stages: [""] }; console.log(stage.stage);
     return (
         <>
-        <div className='stage-create-modal'> 
-            <h1>Add Stages</h1>
-            <Formik
-                initialValues={{ stages: [""] }}
-                onSubmit={async (values) => {
-                    await dispatch(CreateStages(values))
-                    dispatch(getStages())
-                }
+            <div className='stage-create-modal'>
+                <div>
+                    {id ? <h1>Edit Stage</h1> : <h1>Add Stages</h1>}
+                    <span className="close-button" onClick={handleClose}>&times;</span>
+                </div>
+                <Formik
+                    initialValues={initialValues}
+                    enableReinitialize={true}
+                    onSubmit={async (values) => {
+                        console.log(values)
+                        if (id) {
+                            await dispatch(UpdateStage({ id, values }))
+                        } else {
+                            await dispatch(CreateStages(values))
 
-                }
-                render={({ values }) => (
-                    <Form>
-                        <FieldArray
-                            name="stages"
-                            render={arrayHelpers => (
-                                <div>
-                                    {values.stages && values.stages.length > 0 ? (
-                                        values.stages.map((stage, index) => (
-                                            <div key={index}>
-                                                <Field name={`stages.${index}`} />
-                                                <button
-                                                    type="button"
-                                                    onClick={() => arrayHelpers.remove(index)} // remove a friend from the list
-                                                >
-                                                    -
-                                                </button>
-                                                <button
-                                                    type="button"
-                                                    onClick={() => arrayHelpers.insert(index, '')} // insert an empty string at a position
-                                                >
-                                                    +
-                                                </button>
+                        }
+                        await dispatch(getStages());
+                        dispatch(showAddStagesModal(false));
+                    }}
+                    render={({ values }) => (
+                        <Form>
+                            {!id ? (
+                                <FieldArray
+                                    name="stages"
+                                    render={arrayHelpers => (
+                                        <div>
+                                            {values.stages.map((stage, index) => (
+                                                <div key={index}>
+                                                    <Field name={`stages.${index}`} placeholder="Enter the stage" />
+                                                    <button
+                                                        className='buttons-add-and-remove'
+                                                        type="button"
+                                                        onClick={() => arrayHelpers.remove(index)}
+                                                    >
+                                                        -
+                                                    </button>
+                                                    <button
+                                                        className='buttons-add-and-remove'
+                                                        type="button"
+                                                        onClick={() => arrayHelpers.insert(index, '')}
+                                                    >
+                                                        +
+                                                    </button>
+                                                </div>
+                                            ))}
+                                            <button className='buttons' type="button" onClick={() => arrayHelpers.push('')}>
+                                                Add new stage
+                                            </button>
+                                            <div>
+                                                <button className='buttons' type="submit">Submit</button>
                                             </div>
-                                        ))
-                                    ) : (
-                                        <button type="button" onClick={() => arrayHelpers.push('')}>
-                                            {/* show this when user has removed all friends from the list */}
-                                            Add a friend
-                                        </button>
+                                        </div>
                                     )}
+                                />
+                            ) : (
+                                <>
+                                    <Field
+                                        name="stages"
+                                        placeholder="enter the stage"
+
+                                    />
                                     <div>
-                                        <button type="submit">Submit</button>
+                                        <button className='buttons' type="submit">Submit</button>
                                     </div>
-                                </div>
+                                </>
                             )}
-                        />
-                    </Form>
-                )}
-            />
-        </div>
+                        </Form>
+                    )}
+                />
+
+            </div>
             <div className='overlay'></div>
-            </>
-    )
+        </>
+    );
 }
-export default AddStagesModal 
+
+export default AddStagesModal;

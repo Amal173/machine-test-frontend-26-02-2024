@@ -21,7 +21,7 @@
   }
   
   #add-task-form button {
-    background-color: #4caf50; /* A green background for the Add Task button */
+    background-color: rgb(17, 0, 250);
     color: white;
     padding: 14px 20px;
     margin: 8px 0;
@@ -31,7 +31,7 @@
   }
   
   #add-task-form button:hover {
-    background-color: #45a049;
+    background-color: rgb(57, 47, 194);
   }
   
   /* Responsive Modal Content */

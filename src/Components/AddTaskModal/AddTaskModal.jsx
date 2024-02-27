@@ -56,11 +56,9 @@ function AddTaskModal({ id }) {
     }
     return (
         <div id="add-task-modal" class="modal">
-
             <div class="modal-content">
                 <span class="close-button" onClick={handleClose}>&times;</span>
                 {editMode? <h2>Edit Task</h2>: <h2>Add New Task</h2>}
-               
                 <form id='add-task-form' onSubmit={handleSubmit(onSubmit)}>
                     <input
                         type="text"
@@ -84,9 +82,8 @@ function AddTaskModal({ id }) {
                     ></textarea>
                     <select id="column-select"  {...register("status")} >
                     {stages.map((data)=>(
-                        <option value={data.stage}>{data.stage}</option>
+                        <option value={data._id}>{data.stage}</option>
                     ))}
-                
                     </select>
                     <button type="submit">Add Task</button>
                 </form>

@@ -1,21 +1,23 @@
-/* Basic reset */
-body,
-html {
-  margin: 0;
-  padding: 0;
-  font-family: Arial, sans-serif;
+/* General styles */
+.header-left {
+  font-size: 24px;
 }
-
-/* Header styles */
-header {
+header{
   display: flex;
   justify-content: space-between;
-  padding: 20px;
-  background-color: #007bff;
+  padding: 25px 50px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.header-right button {
+  background-color:#0000e6;
   color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  margin-left: 10px;
+  cursor: pointer;
 }
 
-/* Kanban board styles */
 .kanban-board {
   display: flex;
   justify-content: space-around;
@@ -46,9 +48,133 @@ header {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+.action-buttons {
+  display: flex;
+  gap: 20px;
+  padding:20px 20px 0px 0px;
+  justify-content: flex-end;
+}
+
+.action-buttons svg {
+  cursor: pointer;
+  margin-left: 5px;
+}
+
 /* Modal styles */
 .modal {
+  /* display: ${(open || addTaskModal || addStagesModal) ? 'block' : 'none'}; */
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+.close-button {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
 
+.close-button:hover,
+.close-button:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 50%;
+  border-radius: 5px;
+  position: relative;
+}
+
+.close-button {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+/* Footer styles */
+footer {
+  text-align: center;
+  padding: 20px;
+  background-color:#0000e6;
+  color: white;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+/* General styles */
+.header-left {
+  font-size: 24px;
+}
+h2{
+  margin: 0;
+}
+.header-right button ,.action-btn{
+  background-color:#0000e6;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.kanban-board {
+  display: flex;
+  justify-content: space-around;
+  padding: 20px;
+}
+
+.column {
+  width: 30%;
+  background-color: #f4f4f4;
+  margin: 0 10px;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.column h2 {
+  text-align: center;
+}
+
+.tasks {
+  min-height: 200px;
+}
+
+.task {
+  background-color: white;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 3px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.action-buttons svg {
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+/* Modal styles */
+.modal {
+  /* display: ${(open || addTaskModal || addStagesModal) ? 'block' : 'none'}; */
   position: fixed;
   z-index: 1;
   left: 0;
@@ -61,10 +187,12 @@ header {
 
 .modal-content {
   background-color: #fefefe;
-  margin: 15% auto;
+  margin: 5% auto;
   padding: 20px;
   border: 1px solid #888;
   width: 50%;
+  border-radius: 5px;
+  position: relative;
 }
 
 .close-button {
@@ -72,137 +200,18 @@ header {
   float: right;
   font-size: 28px;
   font-weight: bold;
-}
-
-.close-button:hover,
-.close-button:focus {
-  color: black;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-/* Modal Background */
-.modal {
- 
-  position: fixed; /* Stay in place */
-  z-index: 2; /* Sit on top */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
-}
-
-/* Modal Content Box */
-.modal-content {
-  position: relative;
-  background-color: #fefefe;
-  margin: 10% auto; /* 10% from the top and centered */
-  padding: 20px;
-  border-radius: 5px;
-  width: 40%; /* Adjust based on preference */
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
-
-/* Close Button */
-.close-button {
-  color: #aaa;
   position: absolute;
-  top: 0;
-  right: 20px;
-  font-size: 24px;
-  font-weight: bold;
+  top: 10px;
+  right: 10px;
 }
-
-.close-button:hover,
-.close-button:focus {
-  color: black;
-  cursor: pointer;
-}
-
-
 
 /* Footer styles */
 footer {
   text-align: center;
   padding: 20px;
-  background-color: #007bff;
+  background-color:	#999999;
   color: white;
   position: fixed;
   bottom: 0;
   width: 100%;
-}
-
-/* Header and Footer Styles */
-header,
-footer {
-  text-align: center;
-  padding: 20px;
-  background-color: #f0f2f5; /* Light grey for a clean look */
-  color: #333; /* Dark grey text for contrast */
-}
-
-/* Modal Styles for a Cleaner Look */
-.modal {
-
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity for the backdrop */
-}
-
-.modal-content {
-  background-color: #ffffff;
-  margin: 10% auto; /* Adjusted for better positioning */
-  padding: 20px;
-  border-radius: 8px; /* Rounded corners for a modern look */
-  width: 50%; /* Adjust width for a better modal size */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
-}
-
-.close-button {
-  color: #aaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-}
-
-.close-button:hover,
-.close-button:focus {
-  color: black;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-/* Additional Styles for Form Elements Inside Modal */
-#add-task-form input[type="text"],
-#add-task-form textarea,
-#add-task-form select {
-  width: 100%;
-  padding: 10px;
-  margin: 10px 0;
-  display: inline-block;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box; /* Ensures padding doesn't affect width */
-}
-
-#add-task-form button[type="submit"] {
-  width: 100%;
-  background-color: #4caf50; /* Green button for submission */
-  color: white;
-  padding: 14px 20px;
-  margin: 8px 0;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-#add-task-form button[type="submit"]:hover {
-  background-color: #45a049;
 }
