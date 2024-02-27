@@ -1,0 +1,19 @@
+.stage-create-modal{
+    position: absolute;
+    top: 100px;
+    z-index: 5; /* Sit on top */
+    background-color: #fff;
+    width: 500px;
+    left: 28%;
+    padding: 100px;
+}
+.overlay{
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity for the backdrop */;
+}

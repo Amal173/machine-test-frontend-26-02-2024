@@ -3,17 +3,19 @@ import { useDispatch, useSelector } from 'react-redux'
 import { CreateTask, UpdateTask, getSingleTask, getTasks, showAddTaskModal } from '../../Redux/Slice/taskSlice'
 import { useForm } from 'react-hook-form';
 import './AddTaskModal.css'
+import { getStages } from '../../Redux/Slice/stageSlice';
 
 function AddTaskModal({ id }) {
     const dispatch = useDispatch()
-    const { singleTask } = useSelector((state) => state.task)
+    const { singleTask ,editMode} = useSelector((state) => state.task)
+    const { stages } = useSelector((state) => state.stage)
+    console.log(stages);
     const {
         register,
         handleSubmit,
         setValue,
         formState: { errors }
     } = useForm();
-    const { editMode } = useSelector((state) => state.task)
 
     useEffect(()=>{
     if (editMode === true) {
@@ -27,6 +29,10 @@ function AddTaskModal({ id }) {
     useEffect(() => {
         dispatch(getSingleTask(id))
     }, [dispatch,id])
+
+    useEffect(() => {
+        dispatch(getStages())
+    }, [dispatch])
 
 
     const onSubmit = async (data) => {
@@ -77,9 +83,10 @@ function AddTaskModal({ id }) {
                         {...register("discription")}
                     ></textarea>
                     <select id="column-select"  {...register("status")} >
-                        <option value="todo">To Do</option>
-                        <option value="in-progress">In Progress</option>
-                        <option value="done">Done</option>
+                    {stages.map((data)=>(
+                        <option value={data.stage}>{data.stage}</option>
+                    ))}
+                
                     </select>
                     <button type="submit">Add Task</button>
                 </form>

@@ -14,6 +14,7 @@ export const CreateTask = createAsyncThunk("task/CreateTask", async (data) => {
     return response.data;
   }
   )
+  
 export const UpdateTask = createAsyncThunk("task/UpdateTask", async ({id,data}) => {
     console.log(data,id);
     const response = await axios.put(`http://localhost:7070/tasks/${id}`, data);
