@@ -1,0 +1,9 @@
+.body {
+    margin: 20px auto;
+    width: 700px;
+}
+.body .card{
+    display: flex;
+    flex-direction: column;
+  text-align:start;
+}

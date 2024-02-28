@@ -5,9 +5,10 @@ import { CreateStages, UpdateStage, getOneStage, getStages, showAddStagesModal }
 import './AddStagesModal.css'
 import { useSelector } from 'react-redux';
 
-const AddStagesModal = ({ id }) => {
+const AddStagesModal = ({ id,projectId }) => {
+    console.log(id);
     const dispatch = useDispatch();
-    const { stage } = useSelector((state) => state.stage);
+    const { stage } = useSelector((state) => state.stage)
     useEffect(() => {
         if (id) {
             dispatch(getOneStage(id));
@@ -15,6 +16,7 @@ const AddStagesModal = ({ id }) => {
     }, [dispatch, id]);
 
     const handleClose = () => {
+       
         dispatch(showAddStagesModal(false));
     }
     const initialValues = id ? { stages: stage.stage } : { stages: [""] }; console.log(stage.stage);
@@ -33,10 +35,10 @@ const AddStagesModal = ({ id }) => {
                         if (id) {
                             await dispatch(UpdateStage({ id, values }))
                         } else {
-                            await dispatch(CreateStages(values))
+                            await dispatch(CreateStages({id:projectId,values}))
 
                         }
-                        await dispatch(getStages());
+                        await dispatch(getStages({id:projectId}));
                         dispatch(showAddStagesModal(false));
                     }}
                     render={({ values }) => (
@@ -69,7 +71,7 @@ const AddStagesModal = ({ id }) => {
                                                 Add new stage
                                             </button>
                                             <div>
-                                                <button className='buttons' type="submit">Submit</button>
+                                                <button className='buttons submit' type="submit">Submit</button>
                                             </div>
                                         </div>
                                     )}
@@ -82,7 +84,7 @@ const AddStagesModal = ({ id }) => {
 
                                     />
                                     <div>
-                                        <button className='buttons' type="submit">Submit</button>
+                                        <button className='buttons submit' type="submit">Submit</button>
                                     </div>
                                 </>
                             )}

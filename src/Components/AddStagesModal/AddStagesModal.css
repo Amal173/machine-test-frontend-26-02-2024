@@ -41,6 +41,15 @@
     border-radius: 5px;
     cursor: pointer;
   }
+  .buttons.submit{
+    padding: 10px;
+    background-color: rgb(17, 0, 250);
+    border: none;
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
   
   .buttons-add-and-remove {
     padding: 5px 10px; 

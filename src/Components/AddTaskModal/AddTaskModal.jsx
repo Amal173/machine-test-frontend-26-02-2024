@@ -5,11 +5,11 @@ import { useForm } from 'react-hook-form';
 import './AddTaskModal.css'
 import { getStages } from '../../Redux/Slice/stageSlice';
 
-function AddTaskModal({ id }) {
+function AddTaskModal({ id,projectId }) {
     const dispatch = useDispatch()
     const { singleTask ,editMode} = useSelector((state) => state.task)
     const { stages } = useSelector((state) => state.stage)
-    console.log(stages);
+ 
     const {
         register,
         handleSubmit,
@@ -18,6 +18,7 @@ function AddTaskModal({ id }) {
     } = useForm();
 
     useEffect(()=>{
+        setValue("projectId", projectId)
     if (editMode === true) {
         setValue("title", singleTask.title)
         setValue("status", singleTask.status)
@@ -31,7 +32,7 @@ function AddTaskModal({ id }) {
     }, [dispatch,id])
 
     useEffect(() => {
-        dispatch(getStages())
+        dispatch(getStages({id:projectId}))
     }, [dispatch])
 
 
@@ -45,7 +46,7 @@ function AddTaskModal({ id }) {
 
         }
 
-        await dispatch(getTasks())
+        await dispatch(getTasks({id:projectId}))
         dispatch(showAddTaskModal(false))
     };
 
