@@ -1,14 +1,15 @@
-import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import { CreateTask, UpdateTask, getSingleTask, getTasks, showAddTaskModal } from '../../Redux/Slice/taskSlice'
-import { useForm } from 'react-hook-form';
-import './AddTaskModal.css'
 import { getStages } from '../../Redux/Slice/stageSlice';
+import { useDispatch, useSelector } from 'react-redux'
+import { useForm } from 'react-hook-form';
+import React, { useEffect } from 'react'
+import './AddTaskModal.css'
 
 function AddTaskModal({ id,projectId }) {
+
     const dispatch = useDispatch()
-    const { singleTask ,editMode} = useSelector((state) => state.task)
     const { stages } = useSelector((state) => state.stage)
+    const { singleTask ,editMode} = useSelector((state) => state.task)
  
     const {
         register,
@@ -25,11 +26,13 @@ function AddTaskModal({ id,projectId }) {
         setValue("dueDate", singleTask.dueDate)
         setValue("discription", singleTask.discription)
     }
-
 },[editMode,singleTask,setValue])
+
+
     useEffect(() => {
         dispatch(getSingleTask(id))
     }, [dispatch,id])
+
 
     useEffect(() => {
         dispatch(getStages({id:projectId}))
@@ -45,7 +48,6 @@ function AddTaskModal({ id,projectId }) {
             await dispatch(CreateTask(data))
 
         }
-
         await dispatch(getTasks({id:projectId}))
         dispatch(showAddTaskModal(false))
     };
@@ -55,6 +57,7 @@ function AddTaskModal({ id,projectId }) {
     const handleClose = () => {
         dispatch(showAddTaskModal(false))
     }
+    
     return (
         <div id="add-task-modal" class="modal">
             <div class="modal-content">

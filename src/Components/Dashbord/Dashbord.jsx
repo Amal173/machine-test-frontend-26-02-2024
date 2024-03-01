@@ -1,28 +1,33 @@
-import React, { useEffect, useState } from 'react';
-import './Dashbord.css';
-import { useDispatch, useSelector } from 'react-redux';
 import { deleteTask, getTasks, handleEditMode, showAddTaskModal, updateTaskStatus } from '../../Redux/Slice/taskSlice';
-import AddTaskModal from '../AddTaskModal/AddTaskModal';
-import { Modal } from 'antd';
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { deleteStage, getStages, showAddStagesModal } from '../../Redux/Slice/stageSlice';
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import AddStagesModal from '../AddStagesModal/AddStagesModal';
 import { DeleteFilled, EditFilled } from '@ant-design/icons';
-import { Spin } from 'antd';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import AddTaskModal from '../AddTaskModal/AddTaskModal';
+import { useDispatch, useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { Modal, Spin, Divider, Collapse } from 'antd';
+import './Dashbord.css';
+
 function Dashbord() {
-    const location=useLocation()
-    const projectId=location.state.id
-    console.log(projectId);
+
     const dispatch = useDispatch();
-    const [spinning, setSpinning] = useState(false);
-    const { addTaskModal, tasks } = useSelector((state) => state.task);
+    const location = useLocation()
+    const navigate = useNavigate()
+    const projectId = location?.state?.id
     const [id, setId] = useState(null);
     const [type, setType] = useState(null);
     const [open, setOpen] = useState(false);
+    const [spinning, setSpinning] = useState(false);
     const [confirmLoading, setConfirmLoading] = useState(false);
+    const { addTaskModal, tasks } = useSelector((state) => state.task);
     const { stages, addStagesModal } = useSelector((state) => state.stage)
-    
+
+    if (!projectId) {
+        navigate('/')
+    }
+
     const showModal = () => {
         setOpen(true);
     };
@@ -35,10 +40,10 @@ function Dashbord() {
         }, 2000);
         if (type === "stage") {
             await dispatch(deleteStage(id));
-            await dispatch(getStages({id:projectId}))
+            await dispatch(getStages({ id: projectId }))
         } else {
             await dispatch(deleteTask(id));
-            await dispatch(getTasks({id:projectId}));
+            await dispatch(getTasks({ id: projectId }));
         }
     };
 
@@ -56,11 +61,13 @@ function Dashbord() {
     };
 
     useEffect(() => {
-        dispatch(getStages({id:projectId}))
+        dispatch(getStages({ id: projectId }))
     }, [dispatch])
 
+
+
     useEffect(() => {
-        dispatch(getTasks({id:projectId}));
+        dispatch(getTasks({ id: projectId }));
     }, [dispatch]);
 
 
@@ -86,6 +93,7 @@ function Dashbord() {
         if (!destination) {
             return;
         }
+
         if (source.droppableId === destination.droppableId && source.index === destination.index) {
             return;
         }
@@ -94,21 +102,27 @@ function Dashbord() {
         stages.map((item) => {
             if (destination.droppableId === item._id) {
                 newStatus = item._id
+                console.log(item._id, "item._id id");
             }
         })
         await dispatch(updateTaskStatus({ taskId, newStatus }));
-        dispatch(getTasks({id:projectId}));
+        dispatch(getTasks({ id: projectId }));
     };
 
     const handleStageEditModal = (id) => {
         setId(id)
         dispatch(showAddStagesModal(true));
     }
+    const handleExit = () => {
+        navigate('/project')
+    }
 
     return (
         <>
             <header>
-                <div class="header-left"><h2>Kanban Board</h2></div>
+                <div class="header-left">
+                    <i class="fa-solid fa-circle-left" onClick={handleExit}></i>
+                    <h2>Kanban Board</h2></div>
                 <div class="header-right">
                     <button id="add-task-btn" onClick={handleAddStageModal}>Add Stages</button>
                     <button id="add-task-btn" onClick={handleAddModal}>Add Task</button>
@@ -132,7 +146,6 @@ function Dashbord() {
                                     <h2>{item.stage}</h2>
                                     <div className="tasks" data-status={item._id}>
                                         {tasks?.map((data, index) => (
-
                                             <>
                                                 {data.status == item._id &&
                                                     <Draggable key={data._id} draggableId={data._id} index={index}>
@@ -143,13 +156,21 @@ function Dashbord() {
                                                                 {...provided.draggableProps}
                                                                 {...provided.dragHandleProps}
                                                             >
-                                                                <h3>{data.title}</h3>
-                                                                <p>{data.discription}</p>
-                                                                <p><strong>DueDate :</strong> {data.dueDate}</p>
-                                                                <p><strong>Created :</strong> {data.createdOn.slice(0, 16)}</p>
-                                                                <button className='action-btn' onClick={() => handleEdit(data._id)}>edit</button>
-                                                                <button className='action-btn' onClick={() => handleDelete({ Id: data._id, type: "task" })}>delete</button>
+                                                                <Collapse size="large">
+                                                                    <Collapse.Panel key="1" header={
+                                                                        <div className='head'>
+                                                                            {<span>{data.title}</span>}
+                                                                        </div>
+                                                                    }>
+                                                                        <p>{data.discription}</p>
+                                                                        <p><strong>DueDate :</strong> {data.dueDate}</p>
+                                                                        <p><strong>Created :</strong> {data.createdOn.slice(0, 16)}</p>
+                                                                        <button className='action-btn' onClick={() => handleEdit(data._id)}>edit</button>
+                                                                        <button className='action-btn' onClick={() => handleDelete({ Id: data._id, type: "task" })}>delete</button>
+                                                                    </Collapse.Panel>
+                                                                </Collapse>
                                                             </div>
+
                                                         )}
                                                     </Draggable>}
                                             </>
@@ -163,7 +184,7 @@ function Dashbord() {
                 </div>
             </DragDropContext>
             {addTaskModal && <AddTaskModal id={id} projectId={projectId} />}
-            {addStagesModal && <AddStagesModal id={id} projectId={projectId}/>}
+            {addStagesModal && <AddStagesModal id={id} projectId={projectId} />}
 
             <Modal
                 title="Delete"

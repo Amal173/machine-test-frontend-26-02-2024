@@ -17,7 +17,7 @@
   }
   
   #add-task-form textarea {
-    height: 100px; /* Adjust height for description input */
+    height: 100px; 
   }
   
   #add-task-form button {

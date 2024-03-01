@@ -7,3 +7,34 @@
     flex-direction: column;
   text-align:start;
 }
+.edit-btn{
+  padding: 5px 15px;
+  background-color: #f24f1d;
+  border-radius: 5px;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+}
+.delete-btn{
+  padding: 5px 15px;
+  margin: 0 10px;
+  background-color: red;
+  border-radius: 5px;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+}
+.more-btn{
+  padding: 5px 15px;
+  background-color:#8c8c9b;
+  border-radius: 5px;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+}
+.header-right{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}

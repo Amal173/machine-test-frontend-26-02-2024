@@ -1,25 +1,31 @@
-import React, { useEffect } from 'react';
+import { CreateStages, UpdateStage, getOneStage, getStages, showAddStagesModal } from '../../Redux/Slice/stageSlice';
 import { Formik, Form, Field, FieldArray } from 'formik';
 import { useDispatch } from 'react-redux';
-import { CreateStages, UpdateStage, getOneStage, getStages, showAddStagesModal } from '../../Redux/Slice/stageSlice';
-import './AddStagesModal.css'
 import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
+import './AddStagesModal.css'
 
 const AddStagesModal = ({ id,projectId }) => {
-    console.log(id);
+
     const dispatch = useDispatch();
     const { stage } = useSelector((state) => state.stage)
+
+
     useEffect(() => {
         if (id) {
             dispatch(getOneStage(id));
         }
     }, [dispatch, id]);
 
+
     const handleClose = () => {
        
         dispatch(showAddStagesModal(false));
     }
+
+
     const initialValues = id ? { stages: stage.stage } : { stages: [""] }; console.log(stage.stage);
+    
     return (
         <>
             <div className='stage-create-modal'>
