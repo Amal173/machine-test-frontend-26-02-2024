@@ -5,11 +5,11 @@ import { useSelector } from 'react-redux';
 import React, { useEffect } from 'react';
 import './AddStagesModal.css'
 
-const AddStagesModal = ({ id,projectId }) => {
+const AddStagesModal = ({ id, projectId }) => {
 
     const dispatch = useDispatch();
     const { stage } = useSelector((state) => state.stage)
-
+    const initialValues = id ? { stages: stage.stage } : { stages: [""] };
 
     useEffect(() => {
         if (id) {
@@ -19,13 +19,10 @@ const AddStagesModal = ({ id,projectId }) => {
 
 
     const handleClose = () => {
-       
+
         dispatch(showAddStagesModal(false));
     }
 
-
-    const initialValues = id ? { stages: stage.stage } : { stages: [""] }; console.log(stage.stage);
-    
     return (
         <>
             <div className='stage-create-modal'>
@@ -41,10 +38,10 @@ const AddStagesModal = ({ id,projectId }) => {
                         if (id) {
                             await dispatch(UpdateStage({ id, values }))
                         } else {
-                            await dispatch(CreateStages({id:projectId,values}))
+                            await dispatch(CreateStages({ id: projectId, values }))
 
                         }
-                        await dispatch(getStages({id:projectId}));
+                        await dispatch(getStages({ id: projectId }));
                         dispatch(showAddStagesModal(false));
                     }}
                     render={({ values }) => (

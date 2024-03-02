@@ -1,4 +1,4 @@
-import { deleteProject, getProject, showProjectAddModal, showuserAddModal } from '../../Redux/Slice/projectSlice';
+import { deleteProject, getProject, showProjectAddModal, showShareProjectModal, showuserAddModal } from '../../Redux/Slice/projectSlice';
 import ProjectAddModal from '../ProjectAddModal/ProjectAddModal';
 import AddUserForm from '../AddUserForm/AddUserForm';
 import React, { useEffect, useState } from 'react'
@@ -6,9 +6,10 @@ import { useNavigate } from 'react-router-dom';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
-import { Card, Modal } from 'antd';
+import { Card, Modal ,Space} from 'antd';
 import Cookies from 'js-cookie';
 import './Project.css'
+import ShareModal from '../ShareModal/ShareModal';
 
 function Project() {
 
@@ -16,9 +17,10 @@ function Project() {
     const [id, setId] = useState()
     const navigate = useNavigate()
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const { projects, projectAddModal, userAddMoodal } = useSelector((state) => state.project);
+    const { projects, projectAddModal, userAddMoodal,shareModalVisible } = useSelector((state) => state.project);
     const userId = localStorage.getItem('userId')
     const username = localStorage.getItem('username')
+    const role = localStorage.getItem('role')
 
 
     const handleAddProject = () => {
@@ -52,14 +54,17 @@ function Project() {
     const handleCancel = () => {
         setIsModalOpen(false);
     };
+    const handleShare = () => {
+        dispatch(showShareProjectModal(true))
+    };
 
 
     useEffect(() => {
         dispatch(getProject(userId))
-        if (!Cookies.get("Admintoken")) {
+        if (!Cookies.get("AuthToken")) {
             navigate('/')
         }
-    }, [dispatch])
+    }, [dispatch,navigate,userId])
 
 
     return (
@@ -67,19 +72,24 @@ function Project() {
             <header>
                 <div class="header-left"><h2>Project Management</h2></div>
                 <div class="header-right">
-                    <button id="add-task-bt" onClick={handleAdduser}>create User</button>
+                    {role == "Admin" ? <button id="add-task-bt" onClick={handleAdduser}>create User</button> : null}
                     <button id="add-task-btn" onClick={handleAddProject}>Add project</button>
                     <h2>{username}</h2>
-                    <AccountCircleIcon/>
+                    <AccountCircleIcon />
                 </div>
             </header>
             <div className="body"  >
                 <Card title="Projects">
                     {projects?.map((item) => (
                         <Card type="inner" className='card' title={item.title}
-                            extra={<div><button className='edit-btn' onClick={() => handleEdit(item._id)}>edit</button>
+                            extra={<div>
+                                 <Space>
+                                <button className='edit-btn' onClick={() => handleEdit(item._id)}>edit</button>
                                 <button className='delete-btn' onClick={() => handleDelete(item._id)}>delete</button>
-                                <button className='more-btn' onClick={() => handleNavigate(item._id)}>More</button></div>}>
+                                <button className='more-btn' onClick={() => handleNavigate(item._id)}>More</button>
+                                <button className='share-btn' onClick={() => handleShare(item._id)}>share</button>
+                                </Space>
+                                </div>}>
                             {item.type}
                         </Card>
                     ))}
@@ -87,6 +97,7 @@ function Project() {
             </div>
             {projectAddModal && <ProjectAddModal id={id} />}
             {userAddMoodal && <AddUserForm />}
+            <ShareModal />
             <Modal title="Delete ?" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
                 <p>Do you want to delete </p>
             </Modal>

@@ -5,12 +5,12 @@ import { useForm } from 'react-hook-form';
 import React, { useEffect } from 'react'
 import './AddTaskModal.css'
 
-function AddTaskModal({ id,projectId }) {
+function AddTaskModal({ id, projectId }) {
 
     const dispatch = useDispatch()
     const { stages } = useSelector((state) => state.stage)
-    const { singleTask ,editMode} = useSelector((state) => state.task)
- 
+    const { singleTask, editMode } = useSelector((state) => state.task)
+
     const {
         register,
         handleSubmit,
@@ -18,37 +18,37 @@ function AddTaskModal({ id,projectId }) {
         formState: { errors }
     } = useForm();
 
-    useEffect(()=>{
+    useEffect(() => {
         setValue("projectId", projectId)
-    if (editMode === true) {
-        setValue("title", singleTask.title)
-        setValue("status", singleTask.status)
-        setValue("dueDate", singleTask.dueDate)
-        setValue("discription", singleTask.discription)
-    }
-},[editMode,singleTask,setValue])
+        if (editMode === true) {
+            setValue("title", singleTask.title)
+            setValue("status", singleTask.status)
+            setValue("dueDate", singleTask.dueDate)
+            setValue("discription", singleTask.discription)
+        }
+    }, [editMode, singleTask, setValue])
 
 
     useEffect(() => {
         dispatch(getSingleTask(id))
-    }, [dispatch,id])
+    }, [dispatch, id])
 
 
     useEffect(() => {
-        dispatch(getStages({id:projectId}))
+        dispatch(getStages({ id: projectId }))
     }, [dispatch])
 
 
     const onSubmit = async (data) => {
         console.log(data);
         if (editMode === true) {
-    
-            await dispatch(UpdateTask({id,data}))
-        }else{
+
+            await dispatch(UpdateTask({ id, data }))
+        } else {
             await dispatch(CreateTask(data))
 
         }
-        await dispatch(getTasks({id:projectId}))
+        await dispatch(getTasks({ id: projectId }))
         dispatch(showAddTaskModal(false))
     };
 
@@ -57,12 +57,12 @@ function AddTaskModal({ id,projectId }) {
     const handleClose = () => {
         dispatch(showAddTaskModal(false))
     }
-    
+
     return (
         <div id="add-task-modal" class="modal">
             <div class="modal-content">
                 <span class="close-button" onClick={handleClose}>&times;</span>
-                {editMode? <h2>Edit Task</h2>: <h2>Add New Task</h2>}
+                {editMode ? <h2>Edit Task</h2> : <h2>Add New Task</h2>}
                 <form id='add-task-form' onSubmit={handleSubmit(onSubmit)}>
                     <input
                         type="text"
@@ -85,9 +85,9 @@ function AddTaskModal({ id,projectId }) {
                         {...register("discription")}
                     ></textarea>
                     <select id="column-select"  {...register("status")} >
-                    {stages.map((data)=>(
-                        <option value={data._id}>{data.stage}</option>
-                    ))}
+                        {stages.map((data) => (
+                            <option value={data._id}>{data.stage}</option>
+                        ))}
                     </select>
                     <button type="submit">Add Task</button>
                 </form>

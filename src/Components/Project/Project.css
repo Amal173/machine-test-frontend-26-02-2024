@@ -17,7 +17,6 @@
 }
 .delete-btn{
   padding: 5px 15px;
-  margin: 0 10px;
   background-color: red;
   border-radius: 5px;
   border: none;
@@ -27,6 +26,14 @@
 .more-btn{
   padding: 5px 15px;
   background-color:#8c8c9b;
+  border-radius: 5px;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+}
+.share-btn{
+  padding: 5px 15px;
+  background-color:#2a2abd;
   border-radius: 5px;
   border: none;
   color: #fff;

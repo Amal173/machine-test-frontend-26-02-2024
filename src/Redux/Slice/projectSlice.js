@@ -1,43 +1,39 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios';
-
+import API_BASE_URL from './../../config/apiConfig'
 const initialState = {
   projects: [],
   projectAddModal: false,
   userAddMoodal: false,
+  shareModalVisible: false,
   Project: []
 
 }
 
 export const CreateProject = createAsyncThunk("project/CreateProject", async (data) => {
-  console.log(data);
-  const response = await axios.post(`http://localhost:7070/project`, data);
+  const response = await axios.post(`${API_BASE_URL}/project`, data);
   return response.data;
 }
 )
 export const UpdateProject = createAsyncThunk("project/UpdateProject", async ({ id, data }) => {
-  console.log(data, "valur");
-  const response = await axios.put(`http://localhost:7070/project/${id}`, data);
+  const response = await axios.put(`${API_BASE_URL}/project/${id}`, data);
   return response.data;
 }
 )
 
 export const getProject = createAsyncThunk("project/getProject", async (id) => {
-  console.log(id);
-  const response = await axios.get(`http://localhost:7070/project/${id}`);
+  const response = await axios.get(`${API_BASE_URL}/project/${id}`);
   return response.data;
 }
 )
 export const getOneProject = createAsyncThunk("project/getOneProject", async (id) => {
-  console.log(id);
-  const response = await axios.get(`http://localhost:7070/project/single/${id}`);
+  const response = await axios.get(`${API_BASE_URL}/project/single/${id}`);
   return response.data;
 }
 )
 
 export const deleteProject = createAsyncThunk("project/deleteProject", async (id) => {
-  console.log(id);
-  const response = await axios.delete(`http://localhost:7070/project/${id}`);
+  const response = await axios.delete(`${API_BASE_URL}/project/${id}`);
   return response.data;
 }
 )
@@ -48,12 +44,13 @@ export const projectSlice = createSlice({
   initialState,
   reducers: {
     showProjectAddModal: (state, { payload }) => {
-      console.log(payload);
       state.projectAddModal = payload
     },
     showuserAddModal: (state, { payload }) => {
-      console.log(payload);
       state.userAddMoodal = payload
+    },
+    showShareProjectModal: (state, { payload }) => {
+      state.shareModalVisible = payload
     },
   },
   extraReducers: (builder) => {
@@ -68,6 +65,6 @@ export const projectSlice = createSlice({
   }
 })
 
-export const { showProjectAddModal,showuserAddModal } = projectSlice.actions
+export const { showProjectAddModal,showuserAddModal,showShareProjectModal } = projectSlice.actions
 
 export default projectSlice.reducer

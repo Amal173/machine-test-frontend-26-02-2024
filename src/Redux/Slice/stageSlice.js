@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios';
+import API_BASE_URL from './../../config/apiConfig'
 
 const initialState = {
   stages: [],
@@ -9,33 +10,29 @@ const initialState = {
 }
 
 export const CreateStages = createAsyncThunk("stage/CreateStages", async ({id,values}) => {
-    console.log(values);
-    const response = await axios.post(`http://localhost:7070/stages/${id}`, values);
+    const response = await axios.post(`${API_BASE_URL}/stages/${id}`, values);
     return response.data;
   }
   )
 export const UpdateStage = createAsyncThunk("stage/UpdateStage", async ({id,values}) => {
-    console.log(values);
-    const response = await axios.put(`http://localhost:7070/stages/${id}`, values);
+    const response = await axios.put(`${API_BASE_URL}/stages/${id}`, values);
     return response.data;
   }
   )
 
 export const getStages = createAsyncThunk("stage/getStages", async ({id}) => {
-    const response = await axios.get(`http://localhost:7070/stages/${id}`);
+    const response = await axios.get(`${API_BASE_URL}/stages/${id}`);
     return response.data;
   }
   )
 export const getOneStage = createAsyncThunk("stage/getOneStage", async (id) => {
-    console.log(id);
-    const response = await axios.get(`http://localhost:7070/stages/single/${id}`);
+    const response = await axios.get(`${API_BASE_URL}/stages/single/${id}`);
     return response.data;
   }
   )
 
 export const deleteStage = createAsyncThunk("stage/deleteStage", async (id) => {
-    console.log(id);
-    const response = await axios.delete(`http://localhost:7070/stages/${id}`);
+    const response = await axios.delete(`${API_BASE_URL}/stages/${id}`);
     return response.data;
   }
   )
@@ -51,7 +48,6 @@ export const stageSlice = createSlice({
   },
   extraReducers:(builder)=>{
       builder.addCase(getStages.fulfilled, (state, { payload }) => {
-        console.log(payload);
           state.stages = payload.stage
           
         })

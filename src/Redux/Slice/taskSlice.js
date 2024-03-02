@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios';
+import API_BASE_URL from './../../config/apiConfig'
 
 const initialState = {
   tasks: [],
@@ -9,15 +10,13 @@ const initialState = {
 }
 
 export const CreateTask = createAsyncThunk("task/CreateTask", async (data) => {
-  console.log(data);
-  const response = await axios.post(`http://localhost:7070/tasks`, data);
+  const response = await axios.post(`${API_BASE_URL}/tasks`, data);
   return response.data;
 }
 )
 
 export const UpdateTask = createAsyncThunk("task/UpdateTask", async ({ id, data }) => {
-  console.log(data, id);
-  const response = await axios.put(`http://localhost:7070/tasks/${id}`, data);
+  const response = await axios.put(`${API_BASE_URL}/${id}`, data);
   return response.data;
 }
 )
@@ -25,27 +24,24 @@ export const UpdateTask = createAsyncThunk("task/UpdateTask", async ({ id, data 
 export const updateTaskStatus = createAsyncThunk(
   'tasks/updateTaskStatus',
   async ({ taskId, newStatus }) => {
-    console.log(taskId, newStatus);
-    await axios.put(`http://localhost:7070/tasks/status/${taskId}`, { newStatus });
+    await axios.put(`${API_BASE_URL}/tasks/status/${taskId}`, { newStatus });
     return { taskId, newStatus };
   }
 );
 
-export const getTasks = createAsyncThunk("task/getTasks", async ({id}) => {
-  const response = await axios.get(`http://localhost:7070/tasks/${id}`);
+export const getTasks = createAsyncThunk("task/getTasks", async ({ id }) => {
+  const response = await axios.get(`${API_BASE_URL}/tasks/${id}`);
   return response.data;
 }
 )
 
 export const getSingleTask = createAsyncThunk("task/getSingleTask", async (id) => {
-  console.log(id);
-  const response = await axios.get(`http://localhost:7070/tasks/single/${id}`);
+  const response = await axios.get(`${API_BASE_URL}/tasks/single/${id}`);
   return response.data;
 }
 )
 export const deleteTask = createAsyncThunk("task/deleteTask", async (id) => {
-  console.log(id);
-  const response = await axios.delete(`http://localhost:7070/tasks/${id}`);
+  const response = await axios.delete(`${API_BASE_URL}/tasks/${id}`);
   return response.data;
 }
 )

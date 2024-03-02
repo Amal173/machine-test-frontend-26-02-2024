@@ -138,6 +138,7 @@ h2{
 
 .kanban-board {
   display: flex;
+  overflow-y: auto;
   justify-content: space-around;
   padding: 20px;
 }

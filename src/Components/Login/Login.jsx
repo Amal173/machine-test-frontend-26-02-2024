@@ -48,14 +48,14 @@ export default function AdminLogin() {
             password: data.get('password'),
         }))
 
-        if (Cookies.get("Admintoken")) {
+        if (Cookies.get("AuthToken")) {
             navigate('/project')
         }
     };
 
-React.useEffect(()=>{
-    Cookies.remove("Admintoken")
-})
+    React.useEffect(() => {
+        Cookies.remove("AuthToken")
+    })
 
     return (
         <ThemeProvider theme={defaultTheme}>
@@ -73,7 +73,7 @@ React.useEffect(()=>{
                         <LockOutlinedIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
-                       Admin Log in
+                        Admin Log in
                     </Typography>
                     <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
                         <TextField
