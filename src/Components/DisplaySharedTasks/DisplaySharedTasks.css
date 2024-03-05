@@ -1,0 +1,55 @@
+.shared-tasks-container {
+    margin: 20px auto;
+    max-width: 500px; /* Adjust width as needed */
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  .shared-tasks-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  
+  .shared-task-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .task-title {
+    margin: 0;
+    flex-grow: 1; /* Allow title to take up remaining space */
+  }
+  
+  .task-actions {
+    display: flex;
+    gap: 5px; /* Add spacing between buttons */
+  }
+  
+  .mark-complete,
+  .delete-task {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    transition: opacity 0.2s ease-in-out;
+  }
+  
+  .mark-complete:hover,
+  .delete-task:hover {
+    opacity: 0.7; /* Slight transparency on hover */
+  }
+  
+  .mark-complete svg,
+  .delete-task svg {
+    font-size: 20px;
+  }
+  
+  p {
+    text-align: center;
+    margin: 10px 0;
+  }
+  

@@ -7,8 +7,10 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import AddTaskModal from '../AddTaskModal/AddTaskModal';
 import { useDispatch, useSelector } from 'react-redux';
 import React, { useEffect, useState } from 'react';
-import { Modal, Spin, Divider, Collapse } from 'antd';
+import { Modal, Spin, Collapse } from 'antd';
 import './Dashbord.css';
+import ShareModal from '../ShareModal/ShareModal';
+import { showShareProjectModal } from '../../Redux/Slice/sharedProjectSlice';
 
 function Dashbord() {
 
@@ -19,10 +21,12 @@ function Dashbord() {
     const [id, setId] = useState(null);
     const [type, setType] = useState(null);
     const [open, setOpen] = useState(false);
-    const [spinning, setSpinning] = useState(false);
     const [confirmLoading, setConfirmLoading] = useState(false);
-    const { addTaskModal, tasks } = useSelector((state) => state.task);
+    const { addTaskModal, tasks, spinning } = useSelector((state) => state.task);
     const { stages, addStagesModal } = useSelector((state) => state.stage)
+    const { shareModalVisible } = useSelector((state) => state.SharedProject)
+
+
 
     if (!projectId) {
         navigate('/')
@@ -43,12 +47,11 @@ function Dashbord() {
             await dispatch(getStages({ id: projectId }))
         } else {
             await dispatch(deleteTask(id));
-            await dispatch(getTasks({ id: projectId }));
+            dispatch(getTasks({ id: projectId }));
         }
     };
 
     const handleCancel = () => {
-        console.log('Clicked cancel button');
         setOpen(false);
     };
 
@@ -78,18 +81,17 @@ function Dashbord() {
     };
 
     const handleDelete = ({ Id, type }) => {
-        console.log(Id);
         setId(Id);
         setType(type)
         showModal();
     };
+    const handleShare = (Id) => {
+        setId(Id);
+        dispatch(showShareProjectModal(true))
+    };
 
     const onDragEnd = async (result) => {
         const { source, destination, draggableId } = result;
-        setSpinning(true);
-        setTimeout(() => {
-            setSpinning(false);
-        }, 1000);
         if (!destination) {
             return;
         }
@@ -126,6 +128,7 @@ function Dashbord() {
                 <div class="header-right">
                     <button id="add-task-btn" onClick={handleAddStageModal}>Add Stages</button>
                     <button id="add-task-btn" onClick={handleAddModal}>Add Task</button>
+                
                 </div>
             </header>
             <DragDropContext onDragEnd={onDragEnd}>
@@ -167,6 +170,7 @@ function Dashbord() {
                                                                         <p><strong>Created :</strong> {data.createdOn.slice(0, 16)}</p>
                                                                         <button className='action-btn' onClick={() => handleEdit(data._id)}>edit</button>
                                                                         <button className='action-btn' onClick={() => handleDelete({ Id: data._id, type: "task" })}>delete</button>
+                                                                        <button className='action-btn' onClick={() => handleShare(data._id)}>Share</button>
                                                                     </Collapse.Panel>
                                                                 </Collapse>
                                                             </div>
@@ -185,6 +189,7 @@ function Dashbord() {
             </DragDropContext>
             {addTaskModal && <AddTaskModal id={id} projectId={projectId} />}
             {addStagesModal && <AddStagesModal id={id} projectId={projectId} />}
+            {shareModalVisible && <ShareModal id={id} type={"task"} />}
 
             <Modal
                 title="Delete"

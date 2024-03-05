@@ -1,41 +1,59 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { Collapse, Divider, Button, Modal, Input, List, Avatar } from 'antd';
-import { showShareProjectModal } from '../../Redux/Slice/projectSlice';
+import { Divider, Button, Modal, Input, List, Avatar } from 'antd';
+import { CreateSharedProject, showShareProjectModal } from '../../Redux/Slice/sharedProjectSlice';
 import { useSelector } from 'react-redux';
 import { SearchOutlined, UserOutlined } from '@ant-design/icons';
 import { fetchUserData } from '../../Redux/Slice/userSlice';
+import { CreateSharedTask } from '../../Redux/Slice/shareTaskSlice';
 
-function ShareModal() {
+function ShareModal({ id, type }) {
+    console.log(type);
     const dispatch = useDispatch()
-    const { shareModalVisible } = useSelector((state) => state.project);
+    const { shareModalVisible } = useSelector((state) => state.SharedProject);
     const { user } = useSelector((state) => state.user)
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedUsers, setSelectedUsers] = useState([]);
-    console.log(selectedUsers);
+    console.log(typeof selectedUsers);
     const handleCancel = () => {
         dispatch(showShareProjectModal(false))
     }
+
     const handleShareTask = () => {
+        if (type === "project") {
+            dispatch(CreateSharedProject({ sharedTo: selectedUsers, projectId: id, sharedFrom: localStorage.getItem("userId") }))
+
+        } else {
+            dispatch(CreateSharedTask({ sharedTo: selectedUsers, taskId: id, sharedFrom: localStorage.getItem("userId") }))
+        }  
     }
     const handleUserSelect = (users) => {
-
-        setSelectedUsers([...selectedUsers, users]);
-
+        if (type === "project") {
+            if (!selectedUsers.some((i) => i._id === users._id)) {
+                setSelectedUsers([...selectedUsers, users]);
+            }
+        } else {
+            setSelectedUsers([users]);
+        }   
     }
+
     const handleSearch = (value) => {
+        setTimeout(() => {
+        }, "1000");
         setSearchQuery(value);
-        //  search logic
+
     };
 
     useEffect(() => {
-        dispatch(fetchUserData())
-    }, [dispatch])
+        setTimeout(() => {
+            dispatch(fetchUserData({ search: searchQuery, projectid: id, id: localStorage.getItem("userId") }))
+        }, "1000");
+    }, [dispatch, searchQuery])
 
     return (
         <div>
             <Modal
-                title="Share Task"
+                title={"share " + type}
                 visible={shareModalVisible}
                 onCancel={() => handleCancel()}
                 footer={[

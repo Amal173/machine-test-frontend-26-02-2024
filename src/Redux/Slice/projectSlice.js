@@ -5,7 +5,7 @@ const initialState = {
   projects: [],
   projectAddModal: false,
   userAddMoodal: false,
-  shareModalVisible: false,
+
   Project: []
 
 }
@@ -48,9 +48,6 @@ export const projectSlice = createSlice({
     },
     showuserAddModal: (state, { payload }) => {
       state.userAddMoodal = payload
-    },
-    showShareProjectModal: (state, { payload }) => {
-      state.shareModalVisible = payload
     },
   },
   extraReducers: (builder) => {

@@ -6,7 +6,9 @@ const initialState = {
   tasks: [],
   singleTask: {},
   addTaskModal: false,
-  editMode: false
+  editMode: false,
+  spinning: false,
+
 }
 
 export const CreateTask = createAsyncThunk("task/CreateTask", async (data) => {
@@ -16,7 +18,7 @@ export const CreateTask = createAsyncThunk("task/CreateTask", async (data) => {
 )
 
 export const UpdateTask = createAsyncThunk("task/UpdateTask", async ({ id, data }) => {
-  const response = await axios.put(`${API_BASE_URL}/${id}`, data);
+  const response = await axios.put(`${API_BASE_URL}/tasks/${id}`, data);
   return response.data;
 }
 )
@@ -30,6 +32,7 @@ export const updateTaskStatus = createAsyncThunk(
 );
 
 export const getTasks = createAsyncThunk("task/getTasks", async ({ id }) => {
+  console.log(id,"oid");
   const response = await axios.get(`${API_BASE_URL}/tasks/${id}`);
   return response.data;
 }
@@ -57,10 +60,20 @@ export const taskSlice = createSlice({
     handleEditMode: (state, { payload }) => {
       state.editMode = payload
     },
+
   },
   extraReducers: (builder) => {
+    builder.addCase(getTasks.pending, (state) => {
+      state.spinning = true;
+
+    })
     builder.addCase(getTasks.fulfilled, (state, { payload }) => {
       state.tasks = payload.tasks;
+      state.spinning = false;
+
+    })
+    builder.addCase(getTasks.rejected, (state, { payload }) => {
+      state.spinning = false;
 
     })
     builder.addCase(getSingleTask.fulfilled, (state, { payload }) => {

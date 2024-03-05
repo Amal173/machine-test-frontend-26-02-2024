@@ -1,4 +1,4 @@
-import { deleteProject, getProject, showProjectAddModal, showShareProjectModal, showuserAddModal } from '../../Redux/Slice/projectSlice';
+import { deleteProject, getProject, showProjectAddModal, showuserAddModal } from '../../Redux/Slice/projectSlice';
 import ProjectAddModal from '../ProjectAddModal/ProjectAddModal';
 import AddUserForm from '../AddUserForm/AddUserForm';
 import React, { useEffect, useState } from 'react'
@@ -6,10 +6,13 @@ import { useNavigate } from 'react-router-dom';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
-import { Card, Modal ,Space} from 'antd';
+import { Card, Modal, Space } from 'antd';
 import Cookies from 'js-cookie';
-import './Project.css'
 import ShareModal from '../ShareModal/ShareModal';
+import { getSharedProjects, showShareProjectModal } from '../../Redux/Slice/sharedProjectSlice';
+import { UserOutlined } from '@ant-design/icons';
+import { Dropdown, } from 'antd';
+import './Project.css'
 
 function Project() {
 
@@ -17,17 +20,58 @@ function Project() {
     const [id, setId] = useState()
     const navigate = useNavigate()
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const { projects, projectAddModal, userAddMoodal,shareModalVisible } = useSelector((state) => state.project);
+    const { projects, projectAddModal, userAddMoodal } = useSelector((state) => state.project);
+    const { shareModalVisible, sharedProjects } = useSelector((state) => state.SharedProject);
+    const project = [...sharedProjects, ...projects]
     const userId = localStorage.getItem('userId')
     const username = localStorage.getItem('username')
     const role = localStorage.getItem('role')
 
 
-    const handleAddProject = () => {
-        dispatch(showProjectAddModal(true))
-    }
+    const handleMenuClick = (e) => {
+        switch (e.key) {
+            case "create User":
+                dispatch(showuserAddModal(true))
+                break;
+            case "Add project":
+                dispatch(showProjectAddModal(true))
+                break;
+            case "Shared Tasks":
+                navigate('/shared-tasks', { state: { id: userId } })
+                break;
+        }
+        console.log('click', e.key);
+    };
 
-    const handleAdduser = () => {
+    const items = [
+
+        {
+            label: 'Add project',
+            key: 'Add project',
+            icon: <UserOutlined />,
+        },
+        {
+            label: 'Shared Tasks',
+            key: 'Shared Tasks',
+            icon: <UserOutlined />,
+        },
+    ];
+
+    if (role === "Admin") {
+        items.unshift({
+            label: 'create User',
+            key: 'create User',
+            icon: <UserOutlined />,
+        })
+
+    }
+    const menuProps = {
+        items,
+        onClick: handleMenuClick,
+    };
+
+
+    const handleShareTask = () => {
         dispatch(showuserAddModal(true))
     }
 
@@ -48,13 +92,14 @@ function Project() {
     const handleOk = async () => {
         setIsModalOpen(false);
         await dispatch(deleteProject(id))
-        dispatch(getProject())
+        dispatch(getProject(userId))
     };
 
     const handleCancel = () => {
         setIsModalOpen(false);
     };
-    const handleShare = () => {
+    const handleShare = (id) => {
+        setId(id)
         dispatch(showShareProjectModal(true))
     };
 
@@ -64,7 +109,11 @@ function Project() {
         if (!Cookies.get("AuthToken")) {
             navigate('/')
         }
-    }, [dispatch,navigate,userId])
+    }, [dispatch, navigate, userId])
+    useEffect(() => {
+        dispatch(getSharedProjects(userId))
+
+    }, [dispatch, userId])
 
 
     return (
@@ -72,24 +121,23 @@ function Project() {
             <header>
                 <div class="header-left"><h2>Project Management</h2></div>
                 <div class="header-right">
-                    {role == "Admin" ? <button id="add-task-bt" onClick={handleAdduser}>create User</button> : null}
-                    <button id="add-task-btn" onClick={handleAddProject}>Add project</button>
-                    <h2>{username}</h2>
-                    <AccountCircleIcon />
+                    <Dropdown.Button menu={menuProps} placement="bottom" className='profile-btn' icon={<UserOutlined />}>
+                        <h2>{username}</h2>
+                    </Dropdown.Button>
                 </div>
             </header>
             <div className="body"  >
                 <Card title="Projects">
-                    {projects?.map((item) => (
-                        <Card type="inner" className='card' title={item.title}
+                    {project?.map((item) => (
+                        <Card type="inner" className='card' title={item.userId === userId ? item.title : item.title + " 🔗 shared"}
                             extra={<div>
-                                 <Space>
-                                <button className='edit-btn' onClick={() => handleEdit(item._id)}>edit</button>
-                                <button className='delete-btn' onClick={() => handleDelete(item._id)}>delete</button>
-                                <button className='more-btn' onClick={() => handleNavigate(item._id)}>More</button>
-                                <button className='share-btn' onClick={() => handleShare(item._id)}>share</button>
+                                <Space>
+                                    <button className='edit-btn' onClick={() => handleEdit(item._id)}>edit</button>
+                                    <button className='delete-btn' onClick={() => handleDelete(item._id)}>delete</button>
+                                    <button className='more-btn' onClick={() => handleNavigate(item._id)}>More</button>
+                                    <button className='share-btn' onClick={() => handleShare(item._id)}>share</button>
                                 </Space>
-                                </div>}>
+                            </div>}>
                             {item.type}
                         </Card>
                     ))}
@@ -97,7 +145,7 @@ function Project() {
             </div>
             {projectAddModal && <ProjectAddModal id={id} />}
             {userAddMoodal && <AddUserForm />}
-            <ShareModal />
+            {shareModalVisible && <ShareModal id={id} type={"project"} />}
             <Modal title="Delete ?" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
                 <p>Do you want to delete </p>
             </Modal>

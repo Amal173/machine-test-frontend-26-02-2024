@@ -1,13 +1,15 @@
 .body {
-    margin: 20px auto;
-    width: 700px;
+  margin: 20px auto;
+  width: 700px;
 }
-.body .card{
-    display: flex;
-    flex-direction: column;
-  text-align:start;
+
+.body .card {
+  display: flex;
+  flex-direction: column;
+  text-align: start;
 }
-.edit-btn{
+
+.edit-btn {
   padding: 5px 15px;
   background-color: #f24f1d;
   border-radius: 5px;
@@ -15,7 +17,8 @@
   color: #fff;
   cursor: pointer;
 }
-.delete-btn{
+
+.delete-btn {
   padding: 5px 15px;
   background-color: red;
   border-radius: 5px;
@@ -23,25 +26,26 @@
   color: #fff;
   cursor: pointer;
 }
-.more-btn{
+
+.more-btn {
   padding: 5px 15px;
-  background-color:#8c8c9b;
+  background-color: #8c8c9b;
   border-radius: 5px;
   border: none;
   color: #fff;
   cursor: pointer;
 }
-.share-btn{
+
+.share-btn {
   padding: 5px 15px;
-  background-color:#2a2abd;
+  background-color: #2a2abd;
   border-radius: 5px;
   border: none;
   color: #fff;
   cursor: pointer;
 }
-.header-right{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
+
+.header-right .profile-btn button {
+  background-color: #ffffff;
+  color: #2a2abd;
 }

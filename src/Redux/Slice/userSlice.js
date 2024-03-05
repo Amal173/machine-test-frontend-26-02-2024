@@ -10,8 +10,9 @@ const initialState = {
 
 }
 
-export const fetchUserData = createAsyncThunk("user/fetchUserData",async () => {
-    const response = await axios.get(`${API_BASE_URL}/user`);
+export const fetchUserData = createAsyncThunk("user/fetchUserData",async ({search,id,projectid}) => {
+  console.log("_______",projectid);
+    const response = await axios.get(`${API_BASE_URL}/user?search=${search}&id=${id}&projectid=${projectid}`);
     return response.data;
   }
 )
