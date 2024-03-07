@@ -3,16 +3,15 @@ import ProjectAddModal from '../ProjectAddModal/ProjectAddModal';
 import AddUserForm from '../AddUserForm/AddUserForm';
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { Card, Modal, Space } from 'antd';
 import Cookies from 'js-cookie';
 import ShareModal from '../ShareModal/ShareModal';
 import { getSharedProjects, showShareProjectModal } from '../../Redux/Slice/sharedProjectSlice';
-import { UserOutlined } from '@ant-design/icons';
-import { Dropdown, } from 'antd';
+
 import './Project.css'
+import Header from '../Header/Header';
 
 function Project() {
 
@@ -24,52 +23,6 @@ function Project() {
     const { shareModalVisible, sharedProjects } = useSelector((state) => state.SharedProject);
     const project = [...sharedProjects, ...projects]
     const userId = localStorage.getItem('userId')
-    const username = localStorage.getItem('username')
-    const role = localStorage.getItem('role')
-
-
-    const handleMenuClick = (e) => {
-        switch (e.key) {
-            case "create User":
-                dispatch(showuserAddModal(true))
-                break;
-            case "Add project":
-                dispatch(showProjectAddModal(true))
-                break;
-            case "Shared Tasks":
-                navigate('/shared-tasks', { state: { id: userId } })
-                break;
-        }
-        console.log('click', e.key);
-    };
-
-    const items = [
-
-        {
-            label: 'Add project',
-            key: 'Add project',
-            icon: <UserOutlined />,
-        },
-        {
-            label: 'Shared Tasks',
-            key: 'Shared Tasks',
-            icon: <UserOutlined />,
-        },
-    ];
-
-    if (role === "Admin") {
-        items.unshift({
-            label: 'create User',
-            key: 'create User',
-            icon: <UserOutlined />,
-        })
-
-    }
-    const menuProps = {
-        items,
-        onClick: handleMenuClick,
-    };
-
 
     const handleShareTask = () => {
         dispatch(showuserAddModal(true))
@@ -118,14 +71,7 @@ function Project() {
 
     return (
         <div>
-            <header>
-                <div class="header-left"><h2>Project Management</h2></div>
-                <div class="header-right">
-                    <Dropdown.Button menu={menuProps} placement="bottom" className='profile-btn' icon={<UserOutlined />}>
-                        <h2>{username}</h2>
-                    </Dropdown.Button>
-                </div>
-            </header>
+            <Header />
             <div className="body"  >
                 <Card title="Projects">
                     {project?.map((item) => (

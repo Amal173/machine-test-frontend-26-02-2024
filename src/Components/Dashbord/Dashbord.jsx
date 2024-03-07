@@ -124,11 +124,11 @@ function Dashbord() {
             <header>
                 <div class="header-left">
                     <i class="fa-solid fa-circle-left" onClick={handleExit}></i>
-                    <h2>Kanban Board</h2></div>
+                    <h2>Kanban Board</h2>
+                </div>
                 <div class="header-right">
                     <button id="add-task-btn" onClick={handleAddStageModal}>Add Stages</button>
                     <button id="add-task-btn" onClick={handleAddModal}>Add Task</button>
-                
                 </div>
             </header>
             <DragDropContext onDragEnd={onDragEnd}>
